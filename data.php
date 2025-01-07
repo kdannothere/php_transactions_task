@@ -30,17 +30,20 @@ $user_id = isset($_GET['user'])
 if ($user_id) {
     // represents a connection to the database
     $conn = get_connect();
-
-    // Get transactions balances
+    
     $transactions = get_user_monthly_balances($user_id, $conn);
 
     // Generate the table content (assuming the function returns an array)
     $table_content = "<h2>Transactions of $user_name</h2>";
     $table_content .= "<table>";
-    $table_content .= "<tr><th>Month</th><th>Amount</th></tr>";
-    foreach ($transactions as $month => $balance) {
-        $date = convert_date_string($month);
-        $table_content .= "<tr><td>$date</td><td>$balance</td></tr>";
+    $table_content .= "<tr><th>Month</th><th>Amount</th><th>Days with transactions</th></tr>";
+
+    foreach ($transactions as $month) {
+        $date = convert_date_string($month['date']);
+        $amount = $month['amount'];
+        $transaction_days = $month['transaction_days'];
+        $table_content .= "<tr><td>$date</td><td>$amount</td><td>$transaction_days</td></tr>";
+        $table_content .= "" . key($month);
     }
     $table_content .= "</table>";
 

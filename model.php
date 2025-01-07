@@ -68,10 +68,10 @@ function get_user_monthly_balances($user_id, $conn)
 
         if (in_array($transaction['account_from'], $userAccountsArray)) {
             // Outgoing transaction from the user
-            $monthly_balances[$month] = isset($monthly_balances[$month]) ? $monthly_balances[$month] - $amount : -$amount;
+            $monthly_balances[$month] = isset($monthly_balances[$month]) ? ['date' => $month, 'amount' => $monthly_balances[$month]['amount'] - $amount, 'transaction_days' => $monthly_balances[$month]['transaction_days'] + 1] : ['date' => $month, 'amount' => -$amount, 'transaction_days' => 1];
         } elseif (in_array($transaction['account_to'], $userAccountsArray)) {
             // Incoming transaction to the user
-            $monthly_balances[$month] = isset($monthly_balances[$month]) ? $monthly_balances[$month] + $amount : $amount;
+            $monthly_balances[$month] = isset($monthly_balances[$month]) ? ['date' => $month, 'amount' => $monthly_balances[$month]['amount'] + $amount, 'transaction_days' => $monthly_balances[$month]['transaction_days'] + 1] : ['date' => $month, 'amount' => $amount, 'transaction_days' => 1];
         }
     }
 
